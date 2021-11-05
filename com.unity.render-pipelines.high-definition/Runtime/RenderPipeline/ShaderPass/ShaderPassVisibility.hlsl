@@ -1,9 +1,7 @@
 #ifndef VISIBILITY_PASS_HLSL
 #define VISIBILITY_PASS_HLSL
 
-
-#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Visibility/Visibility.hlsl"
-#include "Packages/com.unity.render-pipelines.core/Runtime/GeometryPool/Resources/GeometryPool.hlsl"
+#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Visibility/VisibilityCommon.hlsl"
 
 CBUFFER_START(UnityPerMaterial)
     float4 _DeferredMaterialInstanceData;
@@ -18,15 +16,10 @@ UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
 
 #endif
 
-struct GeoPoolInput
-{
-    uint vertId : SV_VertexID;
-    UNITY_VERTEX_INPUT_INSTANCE_ID
-};
-
 struct VisibilityVtoP
 {
     float4 pos : SV_Position;
+    uint batchID : ATTRIBUTE0;
 
     UNITY_VERTEX_INPUT_INSTANCE_ID
     UNITY_VERTEX_OUTPUT_STEREO
@@ -47,29 +40,39 @@ VisibilityVtoP Vert(VisibilityDrawInput input)
 
     GeoPoolMetadataEntry metadata = _GeoPoolGlobalMetadataBuffer[(int)_DeferredMaterialInstanceData.x];
 
-    GeoPoolVertex vertexData;
-    GeometryPool::LoadVertex(input.vertexIndex, metadata, vertexData);
+    GeoPoolVertex vertexData = GeometryPool::LoadVertex(input.vertexIndex, metadata);
 
     float3 worldPos = TransformObjectToWorld(vertexData.pos);
     v2p.pos = TransformWorldToHClip(worldPos);
+    v2p.batchID = (int)_DeferredMaterialInstanceData.y;
     return v2p;
 }
 
 void Frag(
     VisibilityVtoP packedInput,
     uint primitiveID : SV_PrimitiveID,
-    out uint outVisibility : SV_Target0)
+    out uint outVisibility0 : SV_Target0,
+    out uint outVisibility1 : SV_Target1)
 {
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(packedInput);
     UNITY_SETUP_INSTANCE_ID(packedInput);
     #ifdef DOTS_INSTANCING_ON
-        VisibilityData visData;
+        Visibility::VisibilityData visData;
+        visData.valid = true;
         visData.DOTSInstanceIndex = GetDOTSInstanceIndex();
         visData.primitiveID = primitiveID;
-        outVisibility = packVisibilityData(visData);
+        visData.batchID = packedInput.batchID;
+        Visibility::PackVisibilityData(visData, outVisibility0, outVisibility1);
     #else
-        outVisibility = InvalidVisibilityData;
+        outVisibility0 = 0;
+        outVisibility1 = 0;
     #endif
+}
+
+//TODO: make this follow the pretty pattern of materials.
+void FragEmpty()
+{
+    //empty frag
 }
 
 #endif

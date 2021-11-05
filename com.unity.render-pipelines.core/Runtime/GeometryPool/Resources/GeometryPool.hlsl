@@ -5,7 +5,11 @@
 
 ByteAddressBuffer _GeoPoolGlobalVertexBuffer;
 ByteAddressBuffer _GeoPoolGlobalIndexBuffer;
+ByteAddressBuffer _GeoPoolGlobalSubMeshLookupBuffer;
+StructuredBuffer<GeoPoolSubMeshEntry> _GeoPoolGlobalSubMeshEntryBuffer;
 StructuredBuffer<GeoPoolMetadataEntry> _GeoPoolGlobalMetadataBuffer;
+StructuredBuffer<GeoPoolBatchTableEntry> _GeoPoolGlobalBatchTableBuffer;
+ByteAddressBuffer _GeoPoolGlobalBatchInstanceBuffer;
 float4 _GeoPoolGlobalParams;
 
 namespace GeometryPool
@@ -61,12 +65,13 @@ void LoadVertex(
         outputVertex.T = asfloat(vertexBuffer.Load3(componentOffset + vertexIndex * GEO_POOL_TANGENT_BYTE_SIZE));
 }
 
-void LoadVertex(
+GeoPoolVertex LoadVertex(
     int vertexIndex,
-    GeoPoolMetadataEntry metadata,
-    out GeoPoolVertex outputVertex)
+    GeoPoolMetadataEntry metadata)
 {
+    GeoPoolVertex outputVertex;
     LoadVertex(metadata.vertexOffset + vertexIndex, (int)_GeoPoolGlobalParams.x, 0xfffff, _GeoPoolGlobalVertexBuffer, outputVertex);
+    return outputVertex;
 }
 
 void SubMeshLookupBucketShiftMask(int index, out int bucketId, out int shift, out int mask)
@@ -76,12 +81,34 @@ void SubMeshLookupBucketShiftMask(int index, out int bucketId, out int shift, ou
     mask = 0xff;
 }
 
-
 void PackSubMeshLookup(int index, int value, out int bucketId, out uint packedValue)
 {
     int shift, mask;
     SubMeshLookupBucketShiftMask(index, bucketId, shift, mask);
     packedValue = (uint)(value & mask) << (uint)shift;
+}
+
+uint GetMaterialKey(GeoPoolMetadataEntry metadata, uint primitiveID, ByteAddressBuffer subMeshLookupBuffer, StructuredBuffer<GeoPoolSubMeshEntry> subMeshEntryBuffer)
+{
+    int primitiveBucket, primitiveShift, primitiveMask;
+    SubMeshLookupBucketShiftMask(metadata.subMeshLookupOffset + primitiveID, primitiveBucket, primitiveShift, primitiveMask);
+    int submeshEntryIndex = ((int)subMeshLookupBuffer.Load(primitiveBucket << 2) >> primitiveShift) & primitiveMask;
+    GeoPoolSubMeshEntry submeshEntry = subMeshEntryBuffer[metadata.subMeshEntryOffset + submeshEntryIndex];
+    return submeshEntry.materialKey;
+}
+
+uint GetMaterialKey(GeoPoolMetadataEntry metadata, uint primitiveID)
+{
+    return GetMaterialKey(metadata, primitiveID, _GeoPoolGlobalSubMeshLookupBuffer, _GeoPoolGlobalSubMeshEntryBuffer);
+}
+
+GeoPoolMetadataEntry GetMetadataEntry(int instanceID, int batchID)
+{
+    GeoPoolBatchTableEntry tableEntry = _GeoPoolGlobalBatchTableBuffer[batchID];
+    uint globalInstanceIndex = tableEntry.offset + instanceID;
+    uint pair = _GeoPoolGlobalBatchInstanceBuffer.Load((globalInstanceIndex >> 1) << 2);
+    uint metadataIdx = (globalInstanceIndex & 0x1) ? (pair >> 16) : (pair & 0xFF);
+    return _GeoPoolGlobalMetadataBuffer[metadataIdx];
 }
 
 }

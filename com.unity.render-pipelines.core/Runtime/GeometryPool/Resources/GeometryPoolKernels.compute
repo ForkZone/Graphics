@@ -133,6 +133,7 @@ int _InputSubMeshIndexStart;
 int _InputSubMeshIndexCount;
 int _InputSubMeshBaseVertex;
 int _InputSubMeshDestIndex;
+int _InputSubMeshMaterialKey;
 
 int _InputSubmeshLookupDestOffset;
 int _InputSubmeshLookupBufferCount;
@@ -150,6 +151,7 @@ void MainUpdateSubMeshData(
         entry.indexStart = _InputSubMeshIndexStart;
         entry.indexCount = _InputSubMeshIndexCount;
         entry.baseVertex = _InputSubMeshBaseVertex;
+        entry.materialKey = (uint)_InputSubMeshMaterialKey;
         _OutputSubMeshEntryBuffer[_InputSubMeshDestIndex] = entry;
     }
 

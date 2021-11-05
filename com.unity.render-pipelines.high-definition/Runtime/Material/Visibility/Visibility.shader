@@ -12,7 +12,7 @@ Shader "HDRP/Visibility"
     HLSLINCLUDE
 
     #pragma target 4.5
-    #pragma enable_d3d11_debug_symbols
+    //#pragma enable_d3d11_debug_symbols
 
     //-------------------------------------------------------------------------------------
     // Variant
@@ -63,6 +63,34 @@ Shader "HDRP/Visibility"
 
             #pragma vertex Vert
             #pragma fragment Frag
+
+            ENDHLSL
+        }
+
+
+        Pass
+        {
+            Name "ShadowCaster"
+            Tags{ "LightMode" = "ShadowCaster" }
+
+            Cull Back
+            ZWrite On
+            ZTest LEqual
+
+            HLSLPROGRAM
+
+            #pragma only_renderers d3d11 playstation xboxone xboxseries vulkan metal switch
+
+            //enable GPU instancing support
+            #pragma multi_compile_instancing
+            #pragma instancing_options renderinglayer
+            #pragma multi_compile _ DOTS_INSTANCING_ON
+
+            //TODO: make this follow the pretty pattern of materials.
+            #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPassVisibility.hlsl"
+
+            #pragma vertex Vert
+            #pragma fragment FragEmpty
 
             ENDHLSL
         }

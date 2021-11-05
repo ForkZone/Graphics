@@ -226,10 +226,33 @@ namespace UnityEngine.Rendering.HighDefinition
         private static Material s_VisibilityMaterial = null;
         public Material VisibilityMaterial { get { return s_VisibilityMaterial; } }
 
+        private static Material s_CreateMaterialDepthMaterial = null;
+        public Material CreateMaterialDepthMaterial { get { return s_CreateMaterialDepthMaterial; } }
+
+        public bool CanUseAsDeferredMaterial(Material m)
+        {
+            if (HDRenderPipeline.IsTransparentMaterial(m) || HDRenderPipeline.IsAlphaTestedMaterial(m))
+                return false;
+
+            for (int i = 0; i < m.passCount; ++i)
+            {
+                if (m.GetPassName(i).IndexOf(HDShaderPassNames.s_VBufferLightingStr) >= 0)
+                    return true;
+            }
+
+            return false;
+        }
+
         public override RenderPipelineAsset.VisibilityMaterialRendererInfo GetVisibilityMaterialInfoForRenderer(RenderPipelineAsset.GetVisibilityMaterialInfoForRendererArgs arguments)
         {
+            if (!CanUseAsDeferredMaterial(arguments.material))
+                return base.GetVisibilityMaterialInfoForRenderer(arguments);
+
             if (s_VisibilityMaterial == null)
                 s_VisibilityMaterial = CoreUtils.CreateEngineMaterial(globalSettings.renderPipelineResources.shaders.visibilityPS);
+
+            if (s_CreateMaterialDepthMaterial == null)
+                s_CreateMaterialDepthMaterial = CoreUtils.CreateEngineMaterial(globalSettings.renderPipelineResources.shaders.createMaterialDepthPS);
 
             return new RenderPipelineAsset.VisibilityMaterialRendererInfo()
             {
