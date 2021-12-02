@@ -1,9 +1,11 @@
+using System.Linq;
+
 namespace UnityEngine.Rendering.UI
 {
     /// <summary>
-    /// DebugUIHandler for object list widget.
+    /// DebugUIHandler for object popup widget.
     /// </summary>
-    public class DebugUIHandlerObjectList : DebugUIHandlerField<DebugUI.ObjectListField>
+    public class DebugUIHandlerObjectPopupField : DebugUIHandlerField<DebugUI.ObjectPopupField>
     {
         int m_Index;
 
@@ -17,6 +19,29 @@ namespace UnityEngine.Rendering.UI
             m_Index = 0;
         }
 
+        private void Update()
+        {
+            var elements = m_Field.getObjects();
+            if (elements == null)
+                return;
+
+            var elementsArray = elements.ToArray();
+            var count = elementsArray.Count();
+
+            if (m_Index > count)
+            {
+                m_Index = 0;
+            }
+            else if (m_Index < 0)
+            {
+                m_Index = count - 1;
+            }
+
+            m_Field.SetValue(elementsArray[m_Index]);
+
+            UpdateValueLabel();
+        }
+
         /// <summary>
         /// OnIncrement implementation.
         /// </summary>
@@ -24,7 +49,7 @@ namespace UnityEngine.Rendering.UI
         public override void OnIncrement(bool fast)
         {
             m_Index++;
-            UpdateValueLabel();
+            Update();
         }
 
         /// <summary>
@@ -34,7 +59,7 @@ namespace UnityEngine.Rendering.UI
         public override void OnDecrement(bool fast)
         {
             m_Index--;
-            UpdateValueLabel();
+            Update();
         }
 
         /// <summary>
@@ -42,13 +67,8 @@ namespace UnityEngine.Rendering.UI
         /// </summary>
         public override void UpdateValueLabel()
         {
-            string text = "Empty";
-            var values = m_Field.GetValue();
-            if (values != null)
-            {
-                m_Index = System.Math.Clamp(m_Index, 0, values.Length - 1);
-                text = values[m_Index].name;
-            }
+            var selectedObject = m_Field.GetValue();
+            string text = (selectedObject != null) ? selectedObject.name : "Empty";
             SetLabelText(text);
         }
     }
