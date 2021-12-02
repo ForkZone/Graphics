@@ -59,6 +59,9 @@ namespace UnityEngine.Rendering.HighDefinition
         [Tooltip("Enables denoising with albedo and normal AOVs")]
         public BoolParameter useAOVs = new BoolParameter(false);
 
+        [Tooltip("Enables temporally stable denoising")]
+        public BoolParameter temporal = new BoolParameter(false);
+
 
         /// <summary>
         /// Defines the number of tiles (X: width, Y: height) and the indices of the current tile (Z: i in [0, width[, W: j in [0, height[) for interleaved tiled rendering.
