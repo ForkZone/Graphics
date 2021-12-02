@@ -24,7 +24,6 @@ namespace UnityEngine.Rendering
         }
 
         internal int volumeComponentEnumIndex;
-        internal int volumeCameraEnumIndex;
 
         static class Styles
         {
@@ -73,33 +72,14 @@ namespace UnityEngine.Rendering
                 };
             }
 
-            public static DebugUI.EnumField CreateCameraSelector(DebugDisplaySettingsVolume data, Action<DebugUI.Field<int>, int> refresh)
+            public static DebugUI.ObjectPopupField CreateCameraSelector(DebugDisplaySettingsVolume data, Action<DebugUI.Field<Object>, Object> refresh)
             {
-                int componentIndex = 0;
-                var componentNames = new List<GUIContent>() { Styles.none };
-                var componentValues = new List<int>() { componentIndex++ };
-
-#if UNITY_EDITOR
-                componentNames.Add(Styles.editorCamera);
-                componentValues.Add(componentIndex++);
-#endif
-
-                foreach (var camera in data.volumeDebugSettings.cameras)
-                {
-                    componentNames.Add(new GUIContent() { text = camera.name });
-                    componentValues.Add(componentIndex++);
-                }
-
-                return new DebugUI.EnumField
+                return new DebugUI.ObjectPopupField
                 {
                     displayName = Strings.camera,
-                    getter = () => data.volumeDebugSettings.selectedCameraIndex,
-                    setter = value => data.volumeDebugSettings.selectedCameraIndex = value,
-                    enumNames = componentNames.ToArray(),
-                    enumValues = componentValues.ToArray(),
-                    getIndex = () => data.volumeCameraEnumIndex,
-                    setIndex = value => { data.volumeCameraEnumIndex = value; },
-                    isHiddenCallback = () => data.volumeComponentEnumIndex == 0,
+                    getter = () => data.volumeDebugSettings.selectedCamera,
+                    setter = value => data.volumeDebugSettings.selectedCamera = value as Camera,
+                    getObjects = () => data.volumeDebugSettings.cameras,
                     onValueChanged = refresh
                 };
             }
@@ -225,7 +205,7 @@ namespace UnityEngine.Rendering
                                              if (Time.time - timer < refreshRate)
                                                  return string.Empty;
                                              timer = Time.deltaTime;
-                                             if (data.volumeDebugSettings.selectedCameraIndex != 0)
+                                             if (data.volumeDebugSettings.selectedCamera != null)
                                              {
                                                  var newVolumes = data.volumeDebugSettings.GetVolumes();
                                                  if (!data.volumeDebugSettings.RefreshVolumes(newVolumes))
@@ -350,12 +330,12 @@ namespace UnityEngine.Rendering
             public SettingsPanel(DebugDisplaySettingsVolume data)
             {
                 m_Data = data;
-                AddWidget(WidgetFactory.CreateComponentSelector(m_Data, Refresh));
-                AddWidget(WidgetFactory.CreateCameraSelector(m_Data, Refresh));
+                AddWidget(WidgetFactory.CreateComponentSelector(m_Data, (_, __) => Refresh()));
+                AddWidget(WidgetFactory.CreateCameraSelector(m_Data, (_, __) => Refresh()));
             }
 
             DebugUI.Table m_VolumeTable = null;
-            void Refresh(DebugUI.Field<int> _, int __)
+            void Refresh()
             {
                 var panel = DebugManager.instance.GetPanel(PanelName);
                 if (panel == null)
@@ -364,7 +344,7 @@ namespace UnityEngine.Rendering
                 if (m_VolumeTable != null)
                     panel.children.Remove(m_VolumeTable);
 
-                if (m_Data.volumeDebugSettings.selectedComponent > 0 && m_Data.volumeDebugSettings.selectedCameraIndex > 0)
+                if (m_Data.volumeDebugSettings.selectedComponent > 0 && m_Data.volumeDebugSettings.selectedCamera != null)
                 {
                     m_VolumeTable = WidgetFactory.CreateVolumeTable(m_Data);
                     AddWidget(m_VolumeTable);
@@ -376,7 +356,7 @@ namespace UnityEngine.Rendering
         }
 
         #region IDebugDisplaySettingsData
-        public bool AreAnySettingsActive => volumeCameraEnumIndex > 0 || volumeComponentEnumIndex > 0;
+        public bool AreAnySettingsActive => volumeDebugSettings.selectedCamera != null || volumeComponentEnumIndex > 0;
         public bool IsPostProcessingAllowed => true;
         public bool IsLightingActive => true;
 
