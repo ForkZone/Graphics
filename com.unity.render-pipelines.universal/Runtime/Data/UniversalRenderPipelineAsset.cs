@@ -1205,7 +1205,7 @@ namespace UnityEngine.Rendering.Universal
 
             if (asset.k_AssetPreviousVersion < 10)
             {
-                UniversalRenderPipelineGlobalSettings.instance.shaderVariantLogLevel = (UnityEngine.Rendering.ShaderVariantLogLevel) asset.m_ShaderVariantLogLevel;
+                UniversalRenderPipelineGlobalSettings.instance.shaderVariantLogLevel = (Rendering.ShaderVariantLogLevel) asset.m_ShaderVariantLogLevel;
                 asset.k_AssetPreviousVersion = 10;
             }
 

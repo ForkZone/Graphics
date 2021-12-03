@@ -89,14 +89,14 @@ namespace UnityEngine.Rendering.Universal
 
     public partial class UniversalRenderPipelineAsset
     {
-        [SerializeField] int m_ShaderVariantLogLevel = 0;
+        [SerializeField] int m_ShaderVariantLogLevel;
 
 #pragma warning disable 618 // Obsolete warning
         [Obsolete("Use UniversalRenderPipelineGlobalSettings.instance.shaderVariantLogLevel", false)]
         public ShaderVariantLogLevel shaderVariantLogLevel
         {
             get { return (ShaderVariantLogLevel)UniversalRenderPipelineGlobalSettings.instance.shaderVariantLogLevel; }
-            set { UniversalRenderPipelineGlobalSettings.instance.shaderVariantLogLevel = (UnityEngine.Rendering.ShaderVariantLogLevel)value; }
+            set { UniversalRenderPipelineGlobalSettings.instance.shaderVariantLogLevel = (Rendering.ShaderVariantLogLevel)value; }
         }
 #pragma warning restore 618 // Obsolete warning
 
