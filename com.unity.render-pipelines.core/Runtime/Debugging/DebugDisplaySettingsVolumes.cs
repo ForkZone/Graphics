@@ -341,17 +341,23 @@ namespace UnityEngine.Rendering
                 if (panel == null)
                     return;
 
+                bool needsRefresh = false;
                 if (m_VolumeTable != null)
+                {
+                    needsRefresh = true;
                     panel.children.Remove(m_VolumeTable);
+                }
 
                 if (m_Data.volumeDebugSettings.selectedComponent > 0 && m_Data.volumeDebugSettings.selectedCamera != null)
                 {
+                    needsRefresh = true;
                     m_VolumeTable = WidgetFactory.CreateVolumeTable(m_Data);
                     AddWidget(m_VolumeTable);
                     panel.children.Add(m_VolumeTable);
                 }
 
-                DebugManager.instance.ReDrawOnScreenDebug();
+                if (needsRefresh)
+                    DebugManager.instance.ReDrawOnScreenDebug();
             }
         }
 

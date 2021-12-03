@@ -48,7 +48,7 @@ namespace UnityEngine.Rendering
                         if (camera.TryGetComponent<T>(out T additionalData))
                             yield return camera;
                     }
-                        
+
                 }
             }
         }

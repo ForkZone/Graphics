@@ -19,8 +19,11 @@ namespace UnityEngine.Rendering.UI
             m_Index = 0;
         }
 
-        private void Update()
+        private void ChangeSelectedObject()
         {
+            if (m_Field == null)
+                return;
+
             var elements = m_Field.getObjects();
             if (elements == null)
                 return;
@@ -28,7 +31,7 @@ namespace UnityEngine.Rendering.UI
             var elementsArray = elements.ToArray();
             var count = elementsArray.Count();
 
-            if (m_Index > count)
+            if (m_Index >= count)
             {
                 m_Index = 0;
             }
@@ -37,7 +40,8 @@ namespace UnityEngine.Rendering.UI
                 m_Index = count - 1;
             }
 
-            m_Field.SetValue(elementsArray[m_Index]);
+            var newSelectedValue = elementsArray[m_Index];
+            m_Field.SetValue(newSelectedValue);
 
             UpdateValueLabel();
         }
@@ -49,7 +53,7 @@ namespace UnityEngine.Rendering.UI
         public override void OnIncrement(bool fast)
         {
             m_Index++;
-            Update();
+            ChangeSelectedObject();
         }
 
         /// <summary>
@@ -59,7 +63,7 @@ namespace UnityEngine.Rendering.UI
         public override void OnDecrement(bool fast)
         {
             m_Index--;
-            Update();
+            ChangeSelectedObject();
         }
 
         /// <summary>
