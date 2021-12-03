@@ -1,3 +1,8 @@
+
+{% metadata_file .yamato/_cache_config.metafile -%}
+{% metadata_file .yamato/_latest_editor_versions_trunk.metafile -%}
+
+---
 Build_URP_Terrain_Linux_Vulkan_Standalone_mono_Linear_trunk_auto:
   name: Build URP_Terrain on Linux_Vulkan_mono_Linear_Standalone_build_Player on version trunk auto
   agent:
