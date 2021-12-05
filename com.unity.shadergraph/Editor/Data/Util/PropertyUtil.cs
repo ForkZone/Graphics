@@ -42,6 +42,8 @@ namespace UnityEditor.ShaderGraph
                     return ConcreteSlotValueType.Vector4;
                 case PropertyType.VirtualTexture:
                     return ConcreteSlotValueType.VirtualTexture;
+                case PropertyType.StructuredBuffer:
+                    return ConcreteSlotValueType.StructuredBuffer;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

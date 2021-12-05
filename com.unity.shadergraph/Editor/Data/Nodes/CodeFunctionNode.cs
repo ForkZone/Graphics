@@ -77,6 +77,9 @@ namespace UnityEditor.ShaderGraph
         protected struct PropertyConnectionState
         { }
 
+        protected struct StructuredBuffer
+        { }
+
         protected enum Binding
         {
             None,
@@ -230,6 +233,10 @@ namespace UnityEditor.ShaderGraph
             if (t == typeof(PropertyConnectionState))
             {
                 return SlotValueType.PropertyConnectionState;
+            }
+            if (t == typeof(StructuredBuffer))
+            {
+                return SlotValueType.StructuredBuffer;
             }
 
             throw new ArgumentException("Unsupported type " + t);

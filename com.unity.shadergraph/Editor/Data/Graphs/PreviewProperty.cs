@@ -26,6 +26,8 @@ namespace UnityEditor.ShaderGraph
             public Gradient gradientValue;
             [FieldOffset(0)]
             public VirtualTextureShaderProperty vtProperty;
+            [FieldOffset(0)]
+            public StructuredBuffer structuredBufferValue;
         }
 
         [StructLayout(LayoutKind.Explicit)]
@@ -124,6 +126,22 @@ namespace UnityEditor.ShaderGraph
                 if (propType != PropertyType.Gradient)
                     throw new ArgumentException(string.Format(k_SetErrorMessage, PropertyType.Gradient, propType));
                 m_ClassData.gradientValue = value;
+            }
+        }
+
+        public StructuredBuffer structuredBufferValue
+        {
+            get
+            {
+                if (propType != PropertyType.StructuredBuffer)
+                    throw new ArgumentException(string.Format(k_GetErrorMessage, PropertyType.StructuredBuffer, propType));
+                return m_ClassData.structuredBufferValue;
+            }
+            set
+            {
+                if (propType != PropertyType.StructuredBuffer)
+                    throw new ArgumentException(string.Format(k_SetErrorMessage, PropertyType.StructuredBuffer, propType));
+                m_ClassData.structuredBufferValue = value;
             }
         }
 

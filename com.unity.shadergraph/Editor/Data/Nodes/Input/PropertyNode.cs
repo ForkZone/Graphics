@@ -143,6 +143,10 @@ namespace UnityEditor.ShaderGraph
                     AddSlot(new VirtualTextureMaterialSlot(OutputSlotId, property.displayName, "Out", SlotType.Output));
                     RemoveSlotsNameNotMatching(new[] { OutputSlotId });
                     break;
+                case ConcreteSlotValueType.StructuredBuffer:
+                    AddSlot(new StructuredBufferSlot(OutputSlotId, property.displayName, "Out", SlotType.Output, new StructuredBuffer()));
+                    RemoveSlotsNameNotMatching(new[] { OutputSlotId });
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

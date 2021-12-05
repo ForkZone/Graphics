@@ -122,6 +122,8 @@ namespace UnityEditor.ShaderGraph
                     return "(VT)";
                 case ConcreteSlotValueType.PropertyConnectionState:
                     return "(P)";
+                case ConcreteSlotValueType.StructuredBuffer:
+                    return "(SB)";
                 default:
                     return "(E)";
             }
@@ -192,6 +194,8 @@ namespace UnityEditor.ShaderGraph
                     return new BooleanMaterialSlot(slotId, displayName, shaderOutputName, slotType, false, shaderStageCapability, hidden);
                 case SlotValueType.PropertyConnectionState:
                     return new PropertyConnectionStateMaterialSlot(slotId, displayName, shaderOutputName, slotType, shaderStageCapability, hidden);
+                case SlotValueType.StructuredBuffer:
+                    return new StructuredBufferSlot(slotId, displayName, shaderOutputName, slotType, new StructuredBuffer());
             }
 
             throw new ArgumentOutOfRangeException("type", type, null);

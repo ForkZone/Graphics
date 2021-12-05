@@ -42,6 +42,8 @@ namespace UnityEditor.ShaderGraph
                     return SlotValueType.VirtualTexture;
                 case ConcreteSlotValueType.PropertyConnectionState:
                     return SlotValueType.PropertyConnectionState;
+                case ConcreteSlotValueType.StructuredBuffer:
+                    return SlotValueType.StructuredBuffer;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -83,6 +85,8 @@ namespace UnityEditor.ShaderGraph
                     return ConcreteSlotValueType.VirtualTexture;
                 case SlotValueType.PropertyConnectionState:
                     return ConcreteSlotValueType.PropertyConnectionState;
+                case SlotValueType.StructuredBuffer:
+                    return ConcreteSlotValueType.StructuredBuffer;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -124,6 +128,8 @@ namespace UnityEditor.ShaderGraph
                     return PropertyType.VirtualTexture;
                 case ConcreteSlotValueType.PropertyConnectionState:
                     return PropertyType.PropertyConnectionState;
+                case ConcreteSlotValueType.StructuredBuffer:
+                    return PropertyType.StructuredBuffer;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -169,6 +175,8 @@ namespace UnityEditor.ShaderGraph
                     return precisionToken;
                 case ConcreteSlotValueType.PropertyConnectionState:
                     return "bool";
+                case ConcreteSlotValueType.StructuredBuffer:
+                    return "StructuredBuffer";
                 default:
                     return "Error";
             }
@@ -196,7 +204,8 @@ namespace UnityEditor.ShaderGraph
             "typeFloat1",
             "typeBoolean",
             "typeVirtualTexture",
-            "typePropertyConnectionState"
+            "typePropertyConnectionState",
+            "typeStructuredBuffer"
         };
     }
 }

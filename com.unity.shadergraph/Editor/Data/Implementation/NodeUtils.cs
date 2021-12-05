@@ -543,6 +543,7 @@ namespace UnityEditor.Graphing
                 case ConcreteSlotValueType.Matrix4:
                     return "4x4";
                 case ConcreteSlotValueType.PropertyConnectionState:
+                case ConcreteSlotValueType.StructuredBuffer:
                     return String.Empty;
                 default:
                     return "Error";

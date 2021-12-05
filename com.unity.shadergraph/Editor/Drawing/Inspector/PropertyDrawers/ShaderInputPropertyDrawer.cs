@@ -441,6 +441,10 @@ namespace UnityEditor.ShaderGraph.Drawing.Inspector.PropertyDrawers
                     case GradientShaderProperty gradientProperty:
                         HandleGradientPropertyField(propertySheet, gradientProperty);
                         break;
+                    case StructuredBufferProperty structuredBufferProperty:
+                        //HandleGradientPropertyField(propertySheet, structuredBufferProperty);
+                        HandleStructuredBufferPropertyField(propertySheet, structuredBufferProperty);
+                        break;
                 }
 
                 BuildPrecisionField(propertySheet, property);
@@ -1227,6 +1231,20 @@ namespace UnityEditor.ShaderGraph.Drawing.Inspector.PropertyDrawers
                 gradientShaderProperty.value,
                 "Default",
                 out var propertyGradientField));
+        }
+
+        void HandleStructuredBufferPropertyField(PropertySheet propertySheet, StructuredBufferProperty structuredBufferProperty)
+        {
+            var gradientPropertyDrawer = new TextPropertyDrawer();
+            propertySheet.Add(gradientPropertyDrawer.CreateGUI(
+                newValue =>
+                {
+                    this._preChangeValueCallback("Change property value");
+                    this._changeValueCallback(newValue);
+                    this._postChangeValueCallback();
+                },
+                structuredBufferProperty.value.StructName,
+                "StructName"));
         }
 
         enum KeywordShaderStageDropdownUI    // maps to KeywordShaderStage, this enum ONLY used for the UI dropdown menu
