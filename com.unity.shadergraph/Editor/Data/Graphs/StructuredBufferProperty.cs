@@ -46,10 +46,13 @@ namespace UnityEditor.ShaderGraph
         {
             return "StructuredBuffer<DefaultStruct> " + referenceName;
         }
-
+        internal override string GetHLSLVariableName(bool isSubgraphProperty, GenerationMode mode)
+        {
+            return referenceName;
+        }
         internal override AbstractMaterialNode ToConcreteNode()
         {
-            throw new NotImplementedException();
+            return new StructuredBufferNode() { structuredBuffer = value };
         }
 
         internal override PreviewProperty GetPreviewMaterialProperty()

@@ -228,6 +228,13 @@ namespace UnityEditor.ShaderGraph
                     else
                         sb.AppendLine($"Gradient {GetVariableNameForSlot(OutputSlotId)} = {property.GetHLSLVariableName(isGeneratingSubgraph, mode)};");
                     break;
+                case PropertyType.StructuredBuffer:
+                    if (property is StructuredBufferProperty pro)
+                    {
+                        sb.AppendLine($"StructuredBuffer<{pro.value.StructName}> {GetVariableNameForSlot(OutputSlotId)} = {property.GetHLSLVariableName(isGeneratingSubgraph, mode)};");
+                    }
+                    break;
+
             }
 
             if (property.isConnectionTestable)

@@ -1,4 +1,5 @@
-﻿using UnityEditor.Graphing;
+﻿using System;
+using UnityEditor.Graphing;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
@@ -15,26 +16,11 @@ namespace UnityEditor.ShaderGraph
         }
 
         public StructuredBuffer buffer;
-
-        // public AbstractShaderProperty AsShaderProperty()
-        // {
-        //     var prop = new StructuredBufferProperty() { value = buffer };
-        //     if (buffer != null)
-        //         prop.displayName = buffer.StructName;
-        //     return prop;
-        // }
-        // public override void CollectShaderProperties(PropertyCollector properties, GenerationMode generationMode)
-        // {
-        //     properties.AddShaderProperty(new StructuredBufferProperty()
-        //     {
-        //         value = buffer
-        //     });
-        // }
         public sealed override void UpdateNodeAfterDeserialization()
         {
-            AddSlot(new Vector4MaterialSlot(0, "RGBA", "RGBA", SlotType.Output, Vector4.zero, ShaderStageCapability.All));
+            AddSlot(new Vector1MaterialSlot(0, "Idx", "Idx", SlotType.Input, 0, ShaderStageCapability.All));
             AddSlot(new StructuredBufferSlot(1, "Buffer", "Buffer", SlotType.Input, new StructuredBuffer()));
-            RemoveSlotsNameNotMatching(new[] {0, 1});
+            //RemoveSlotsNameNotMatching(new[] {0, 1});
         }
 
         public override void Setup()
@@ -44,12 +30,27 @@ namespace UnityEditor.ShaderGraph
 
         public virtual void GenerateNodeCode(ShaderStringBuilder sb, GenerationMode generationMode)
         {
-            //TODO:DELETE
-            Debug.Log("////////////////////////////");
-            Debug.Log(GetSlotValue(1, generationMode));
+            // //TODO:DELETE
+            // Debug.Log("////////////////////////////");
+            // Debug.Log(GetSlotValue(1, generationMode));
+            // foreach (var VARIABLE in GetSlots())
+            // {
+            //
+            // }
+            // sb.AppendLine(string.Format("float4 {0} = float4(0,1,0,0);" , GetVariableNameForSlot(0)));
+            using (var outputSlots = PooledList<MaterialSlot>.Get())
+            {
+                //GetInputSlots<MaterialSlot>(inputSlots);
+                var sBName = GetSlotValue(1, generationMode);
+                var idxName = GetSlotValue(0, generationMode);
+                GetOutputSlots<MaterialSlot>(outputSlots);
+                foreach (var slot in outputSlots)
+                {
+                    var outPutName = GetVariableNameForSlot(slot.id);
+                    sb.AppendLine("{3} {0} = {1}[{4}].{2};", outPutName, sBName, slot.shaderOutputName, slot.concreteValueType.ToShaderString(), idxName);
 
-            sb.AppendLine(string.Format("float4 {0} = float4(0,1,0,0);" , GetVariableNameForSlot(0)));
-
+                }
+            }
         }
     }
 }

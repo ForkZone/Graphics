@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace UnityEditor.ShaderGraph.Internal
 {
-    class StructuredBuffer
+    public class StructuredBuffer
     {
         [SerializeField] private string m_StructName = "DefaultStruct";
 
