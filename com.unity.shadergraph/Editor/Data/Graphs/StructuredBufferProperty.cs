@@ -44,7 +44,7 @@ namespace UnityEditor.ShaderGraph
         }
         internal override string GetPropertyAsArgumentString(string precisionString)
         {
-            return "StructuredBuffer<DefaultStruct> " + referenceName;
+            return $"StructuredBuffer<{value.StructName}> {referenceName}";
         }
         internal override string GetHLSLVariableName(bool isSubgraphProperty, GenerationMode mode)
         {

@@ -93,6 +93,9 @@ namespace UnityEditor.ShaderGraph.Drawing
                 case GradientShaderProperty gradientProperty:
                     gradientProperty.value = (Gradient)newShaderInputValue;
                     break;
+                case StructuredBufferProperty structuredBufferProperty:
+                    structuredBufferProperty.value.StructName = (string)newShaderInputValue;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
