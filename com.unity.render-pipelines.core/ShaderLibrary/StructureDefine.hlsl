@@ -10,9 +10,11 @@ struct GrassCalcStruct
     int CalcIdx;
     float Spring;
     float Damping;
+    float2 Period;
     float3 PosWs;
     float3 UpNormal;
     float3 SpringVector;
+    float3 AmbientVector;
     float3 Velocity;
 };
 #endif
