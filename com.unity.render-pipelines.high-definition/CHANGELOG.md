@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [12.1.3] - 2021-11-17
+
+### Fixed
+- Fixed some XR devices: Pulling camera world space position from mainViewConstants instead of transform.
+- Fixed Xbox Series X compilation issue with DoF shader
+
 ## [12.1.2] - 2021-10-22
 
 ### Fixed

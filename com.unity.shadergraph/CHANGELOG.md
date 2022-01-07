@@ -4,6 +4,11 @@ All notable changes to this package are documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [12.1.3] - 2021-11-17
+
+Version Updated
+The version number for this package has increased due to a version update of a related graphics package.
+
 ## [12.1.2] - 2021-10-22
 
 ### Fixed
@@ -23,6 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
   - Fixed bug where an exception was thrown on undo operation after adding properties to a category [1348910] (https://fogbugz.unity3d.com/f/cases/1348910/)
   - Fixed unhandled exception when loading a subgraph with duplicate slots [1369039].
+  - Fixed how graph errors were displayed when variant limits were reached [1355815]
 
 ## [12.0.0] - 2021-01-11
 
