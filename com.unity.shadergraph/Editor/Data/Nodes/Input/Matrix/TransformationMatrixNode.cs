@@ -43,7 +43,7 @@ namespace UnityEditor.ShaderGraph
             {UnityMatrixType.Projection, "UNITY_MATRIX_P"},
             {UnityMatrixType.InverseProjection, "UNITY_MATRIX_I_P"},
             {UnityMatrixType.ViewProjection, "UNITY_MATRIX_VP"},
-            {UnityMatrixType.InverseViewProjection, "UNITY_MATRIX_I_VP"},
+            {UnityMatrixType.InverseViewProjection, "UNITY_MATRIX_I_VP"}
         };
 
         static Dictionary<TransformationMatrixType, UnityMatrixType> m_MatrixUpgrade = new Dictionary<TransformationMatrixType, UnityMatrixType>

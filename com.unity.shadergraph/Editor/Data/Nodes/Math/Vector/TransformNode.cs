@@ -252,7 +252,36 @@ namespace UnityEditor.ShaderGraph
                 {
                     transformString = inputValue;
                 }
+            } else if (conversion.from == CoordinateSpace.Camera)
+            {
+                if (conversion.to == CoordinateSpace.World)
+                {
+                    transformString = string.Format(conversionType == ConversionType.Direction ?
+                        "mul(UNITY_MATRIX_I_C, $precision4({0}, 0)).xyz" :
+                        "mul(UNITY_MATRIX_I_C, $precision4({0}, 1)).xyz", inputValue);
+                }
+                else if (conversion.to == CoordinateSpace.Object)
+                {
+                    transformString = string.Format(conversionType == ConversionType.Direction ?
+                        "TransformWorldToObjectDir(mul((float3x3)UNITY_MATRIX_I_C, {0}))" :
+                        "TransformWorldToObject(mul(UNITY_MATRIX_I_C, $precision4({0}, 1) ).xyz)", inputValue);
+                }
+                else if (conversion.to == CoordinateSpace.Tangent)
+                {
+                    requiresTangentTransform = true;
+                    tangentTransformSpace = CoordinateSpace.World.ToString();
+                    transformString = string.Format("TransformWorldToTangent(mul(UNITY_MATRIX_I_C, $precision4({0}, 1) ).xyz, {1})", inputValue, targetTransformString);
+                }
+                else if (conversion.to == CoordinateSpace.View)
+                {
+                    transformString = inputValue;
+                }
+                else if (conversion.to == CoordinateSpace.AbsoluteWorld)
+                {
+                    transformString = string.Format("GetAbsolutePositionWS(mul(UNITY_MATRIX_I_C, $precision4({0}, 1))).xyz", inputValue);
+                }
             }
+
             if (requiresTransposeTangentTransform)
                 sb.AppendLine(string.Format("$precision3x3 {0} = transpose($precision3x3(IN.{1}SpaceTangent, IN.{1}SpaceBiTangent, IN.{1}SpaceNormal));", transposeTargetTransformString, CoordinateSpace.World.ToString()));
             else if (requiresTangentTransform)

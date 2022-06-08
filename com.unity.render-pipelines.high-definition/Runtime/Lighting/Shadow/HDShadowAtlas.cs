@@ -256,7 +256,7 @@ namespace UnityEngine.Rendering.HighDefinition
             public bool isRenderingOnACache;
         }
 
-        internal TextureHandle RenderShadowMaps(RenderGraph renderGraph, CullingResults cullResults, in ShaderVariablesGlobal globalCBData, FrameSettings frameSettings, string shadowPassName)
+        internal TextureHandle RenderShadowMaps(HDCamera hdCamera, RenderGraph renderGraph, CullingResults cullResults, in ShaderVariablesGlobal globalCBData, FrameSettings frameSettings, string shadowPassName)
         {
             using (var builder = renderGraph.AddRenderPass<RenderShadowMapsPassData>("Render Shadow Maps", out var passData, ProfilingSampler.Get(HDProfileId.RenderShadowMaps)))
             {
@@ -325,6 +325,8 @@ namespace UnityEngine.Rendering.HighDefinition
                             data.globalCBData._ViewProjMatrix = viewProjection;
                             data.globalCBData._InvViewProjMatrix = viewProjection.inverse;
                             data.globalCBData._SlopeScaleDepthBias = -shadowRequest.slopeBias;
+                            data.globalCBData._CAMatrix = hdCamera.mainViewConstants.viewMatrix;
+                            data.globalCBData._InvCAMatrix = hdCamera.mainViewConstants.invViewMatrix;
 
                             data.globalCB.PushGlobal(ctx.cmd, data.globalCBData, HDShaderIDs._ShaderVariablesGlobal);
 
@@ -566,14 +568,14 @@ namespace UnityEngine.Rendering.HighDefinition
             }
         }
 
-        internal TextureHandle RenderShadows(RenderGraph renderGraph, CullingResults cullResults, in ShaderVariablesGlobal globalCB, FrameSettings frameSettings, string shadowPassName)
+        internal TextureHandle RenderShadows(HDCamera hdCamera,RenderGraph renderGraph, CullingResults cullResults, in ShaderVariablesGlobal globalCB, FrameSettings frameSettings, string shadowPassName)
         {
             if (m_ShadowRequests.Count == 0)
             {
                 return renderGraph.defaultResources.defaultShadowTexture;
             }
 
-            RenderShadowMaps(renderGraph, cullResults, globalCB, frameSettings, shadowPassName);
+            RenderShadowMaps(hdCamera, renderGraph, cullResults, globalCB, frameSettings, shadowPassName);
 
             if (m_BlurAlgorithm == BlurAlgorithm.EVSM)
             {

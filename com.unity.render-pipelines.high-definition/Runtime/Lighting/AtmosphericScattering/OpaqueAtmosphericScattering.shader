@@ -7,7 +7,7 @@ Shader "Hidden/HDRP/OpaqueAtmosphericScattering"
 
         #pragma multi_compile_fragment _ DEBUG_DISPLAY
 
-        // #pragma enable_d3d11_debug_symbols
+        #pragma enable_d3d11_debug_symbols
 
         #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
         #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"

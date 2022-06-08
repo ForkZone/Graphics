@@ -1112,6 +1112,8 @@ namespace UnityEngine.Rendering.HighDefinition
 
             cb._ViewMatrix = mainViewConstants.viewMatrix;
             cb._CameraViewMatrix = mainViewConstants.viewMatrix;
+            cb._CAMatrix = mainViewConstants.viewMatrix;
+            cb._InvCAMatrix = mainViewConstants.invViewMatrix;
             cb._InvViewMatrix = mainViewConstants.invViewMatrix;
             cb._ProjMatrix = mainViewConstants.projMatrix;
             cb._InvProjMatrix = mainViewConstants.invProjMatrix;

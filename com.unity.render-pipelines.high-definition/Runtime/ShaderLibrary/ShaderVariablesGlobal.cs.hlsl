@@ -149,6 +149,8 @@ GLOBAL_CBUFFER_START(ShaderVariablesGlobal, b0)
     float _GlobalTessellationFactorMultiplier;
     float _SpecularOcclusionBlend;
     float _DeExposureMultiplier;
+    float4x4 _CAMatrix;
+    float4x4 _InvCAMatrix;
 CBUFFER_END
 
 

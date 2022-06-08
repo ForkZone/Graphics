@@ -885,31 +885,30 @@ namespace UnityEngine.Rendering.HighDefinition
         internal void RenderShadows(RenderGraph renderGraph, in ShaderVariablesGlobal globalCB, HDCamera hdCamera, CullingResults cullResults, ref ShadowResult result)
         {
             InvalidateAtlasOutputsIfNeeded();
-
             // Avoid to do any commands if there is no shadow to draw
             if (m_ShadowRequestCount != 0 &&
                 (hdCamera.frameSettings.IsEnabled(FrameSettingsField.OpaqueObjects) || hdCamera.frameSettings.IsEnabled(FrameSettingsField.TransparentObjects)))
             {
-                result.cachedPunctualShadowResult = cachedShadowManager.punctualShadowAtlas.RenderShadows(renderGraph, cullResults, globalCB, hdCamera.frameSettings, "Cached Punctual Lights Shadows rendering");
+                result.cachedPunctualShadowResult = cachedShadowManager.punctualShadowAtlas.RenderShadows(hdCamera,renderGraph, cullResults, globalCB, hdCamera.frameSettings, "Cached Punctual Lights Shadows rendering");
                 cachedShadowManager.punctualShadowAtlas.AddBlitRequestsForUpdatedShadows(m_Atlas);
-                BlitCachedShadows(renderGraph, ShadowMapType.PunctualAtlas);
+                BlitCachedShadows(renderGraph, ShadowMapType.PunctualAtlas); 
 
                 if (ShaderConfig.s_AreaLights == 1)
                 {
-                    cachedShadowManager.areaShadowAtlas.RenderShadowMaps(renderGraph, cullResults, globalCB, hdCamera.frameSettings, "Cached Area Lights Shadows rendering");
+                    cachedShadowManager.areaShadowAtlas.RenderShadowMaps(hdCamera, renderGraph, cullResults, globalCB, hdCamera.frameSettings, "Cached Area Lights Shadows rendering");
                     cachedShadowManager.areaShadowAtlas.AddBlitRequestsForUpdatedShadows(m_AreaLightShadowAtlas);
                     BlitCachedShadows(renderGraph, ShadowMapType.AreaLightAtlas);
-                    m_AreaLightShadowAtlas.RenderShadowMaps(renderGraph, cullResults, globalCB, hdCamera.frameSettings, "Area Light Shadows rendering");
+                    m_AreaLightShadowAtlas.RenderShadowMaps(hdCamera, renderGraph, cullResults, globalCB, hdCamera.frameSettings, "Area Light Shadows rendering");
                     result.areaShadowResult = m_AreaLightShadowAtlas.BlurShadows(renderGraph);
                     result.cachedAreaShadowResult = cachedShadowManager.areaShadowAtlas.BlurShadows(renderGraph);
                 }
 
                 BlitCachedShadows(renderGraph);
 
-                result.punctualShadowResult = m_Atlas.RenderShadows(renderGraph, cullResults, globalCB, hdCamera.frameSettings, "Punctual Lights Shadows rendering");
-                result.directionalShadowResult = m_CascadeAtlas.RenderShadows(renderGraph, cullResults, globalCB, hdCamera.frameSettings, "Directional Light Shadows rendering");
+                result.punctualShadowResult = m_Atlas.RenderShadows(hdCamera,renderGraph, cullResults, globalCB, hdCamera.frameSettings, "Punctual Lights Shadows rendering");
+                result.directionalShadowResult = m_CascadeAtlas.RenderShadows(hdCamera,renderGraph, cullResults, globalCB, hdCamera.frameSettings, "Directional Light Shadows rendering");
                 if (ShaderConfig.s_AreaLights == 1)
-                    result.areaShadowResult = m_AreaLightShadowAtlas.RenderShadows(renderGraph, cullResults, globalCB, hdCamera.frameSettings, "Area Light Shadows rendering");
+                    result.areaShadowResult = m_AreaLightShadowAtlas.RenderShadows(hdCamera,renderGraph, cullResults, globalCB, hdCamera.frameSettings, "Area Light Shadows rendering");
             }
 
             // TODO RENDERGRAPH

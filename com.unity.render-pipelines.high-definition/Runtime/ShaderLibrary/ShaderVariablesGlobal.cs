@@ -55,8 +55,9 @@ namespace UnityEngine.Rendering.HighDefinition
         public Matrix4x4 _InvViewProjMatrix;
         public Matrix4x4 _NonJitteredViewProjMatrix;
         public Matrix4x4 _PrevViewProjMatrix; // non-jittered
-        public Matrix4x4 _PrevInvViewProjMatrix; // non-jittered
+        public Matrix4x4 _PrevInvViewProjMatrix;  // non-jittered
 
+        //public Matrix4x4 _InvCameraMatrix;
 #if !USING_STEREO_MATRICES
         public Vector4 _WorldSpaceCameraPos_Internal;
         public Vector4 _PrevCamPosRWS_Internal;
@@ -262,5 +263,7 @@ namespace UnityEngine.Rendering.HighDefinition
         public float _GlobalTessellationFactorMultiplier;
         public float _SpecularOcclusionBlend;
         public float _DeExposureMultiplier;
+        public Matrix4x4 _CAMatrix;
+        public Matrix4x4 _InvCAMatrix;
     }
 }

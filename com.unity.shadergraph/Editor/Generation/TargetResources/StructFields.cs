@@ -29,6 +29,7 @@ namespace UnityEditor.ShaderGraph
                 "INSTANCEID_SEMANTIC", "UNITY_ANY_INSTANCING_ENABLED");
             public static FieldDescriptor vertexID = new FieldDescriptor(Attributes.name, "vertexID", "ATTRIBUTES_NEED_VERTEXID", ShaderValueType.Uint,
                 "VERTEXID_SEMANTIC", subscriptOptions: StructFieldOptions.Optional);
+            public static FieldDescriptor positionOSPreDis = new FieldDescriptor(Attributes.name, "positionOSPreDis", "", ShaderValueType.Float3, "TEXCOORD4");
         }
 
         public struct Varyings

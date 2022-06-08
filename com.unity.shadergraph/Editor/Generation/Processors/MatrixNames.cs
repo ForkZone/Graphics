@@ -12,5 +12,7 @@ namespace UnityEditor.ShaderGraph
         public const string ProjectionInverse = "UNITY_MATRIX_I_P";
         public const string ViewProjection = "UNITY_MATRIX_VP";
         public const string ViewProjectionInverse = "UNITY_MATRIX_I_VP";
+        public const string Camera = "UNITY_MATRIX_C";
+        public const string CameraInverse = "UNITY_MATRIX_I_C";
     }
 }

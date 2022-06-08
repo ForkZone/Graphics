@@ -1964,7 +1964,7 @@ IndirectLighting EvaluateBSDF_Env(  LightLoopContext lightLoopContext,
 
     // TODO: Do refraction reference (is it even possible ?)
     // TODO: handle clear coat
-
+    envLighting = float3(1,0,0) * 100;
 
 //    #ifdef USE_DIFFUSE_LAMBERT_BRDF
 //    envLighting += IntegrateLambertIBLRef(lightData, V, bsdfData);
@@ -2021,12 +2021,12 @@ IndirectLighting EvaluateBSDF_Env(  LightLoopContext lightLoopContext,
         {
             // No correction needed for coatR as it is smooth
             // Note: coat F is scalar as it is a dieletric
-            envLighting *= Sq(1.0 - preLightData.coatIblF);
+            ///envLighting *= Sq(1.0 - preLightData.coatIblF);
 
             // Evaluate the Clear Coat color
             float4 preLD = SampleEnv(lightLoopContext, lightData.envIndex, coatR, 0.0, lightData.rangeCompressionFactorCompensation, posInput.positionNDC);
             envLighting += preLightData.coatIblF * preLD.rgb * preLightData.clearCoatIndirectSpec;
-
+            envLighting = float3(0,1,0) * 100;
             // Can't attenuate diffuse lighting here, may try to apply something on bakeLighting in PostEvaluateBSDF
         }
     }
@@ -2038,6 +2038,7 @@ IndirectLighting EvaluateBSDF_Env(  LightLoopContext lightLoopContext,
         // specular transmisted lighting is the remaining of the reflection (let's use this approx)
         // With refraction, we don't care about the clear coat value, only about the Fresnel, thus why we use 'envLighting ='
         envLighting = (1.0 - F) * preLD.rgb * preLightData.transparentTransmittance;
+        envLighting = float3(0,0,1) * 100;
     }
 #endif
 
@@ -2045,14 +2046,13 @@ IndirectLighting EvaluateBSDF_Env(  LightLoopContext lightLoopContext,
 
     UpdateLightingHierarchyWeights(hierarchyWeight, weight);
     envLighting *= weight * lightData.multiplier;
-
     if (GPUImageBasedLightingType == GPUIMAGEBASEDLIGHTINGTYPE_REFLECTION)
         lighting.specularReflected = envLighting;
 #if HAS_REFRACTION
     else
         lighting.specularTransmitted = envLighting;
 #endif
-
+    lighting.specularReflected = 0;
     return lighting;
 }
 

@@ -16,7 +16,8 @@
 #define UNITY_MATRIX_UNJITTERED_VP  _XRNonJitteredViewProjMatrix[unity_StereoEyeIndex]
 #define UNITY_MATRIX_PREV_VP        _XRPrevViewProjMatrix[unity_StereoEyeIndex]
 #define UNITY_MATRIX_PREV_I_VP      _XRPrevInvViewProjMatrix[unity_StereoEyeIndex]
-
+#define UNITY_MATRIX_C              _XRViewMatrix[unity_StereoEyeIndex]
+#define UNITY_MATRIX_I_C            _XRInvViewMatrix[unity_StereoEyeIndex]
 #else
 
 #define UNITY_MATRIX_V     _ViewMatrix
@@ -28,6 +29,8 @@
 #define UNITY_MATRIX_UNJITTERED_VP _NonJitteredViewProjMatrix
 #define UNITY_MATRIX_PREV_VP _PrevViewProjMatrix
 #define UNITY_MATRIX_PREV_I_VP _PrevInvViewProjMatrix
+#define UNITY_MATRIX_C     _CAMatrix
+#define UNITY_MATRIX_I_C   _InvCAMatrix
 
 #endif // USING_STEREO_MATRICES
 

@@ -85,6 +85,8 @@ CBUFFER_END
 #define UNITY_MATRIX_MVP   mul(UNITY_MATRIX_VP, UNITY_MATRIX_M)
 #define UNITY_PREV_MATRIX_M   unity_MatrixPreviousM
 #define UNITY_PREV_MATRIX_I_M unity_MatrixPreviousMI
+#define UNITY_MATRIX_C     unity_MatrixV
+#define UNITY_MATRIX_I_C   unity_MatrixInvV
 #else
 // Not defined already by built-in
 #define UNITY_MATRIX_I_M   unity_WorldToObject

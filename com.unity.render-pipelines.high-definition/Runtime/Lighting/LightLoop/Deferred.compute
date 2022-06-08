@@ -45,7 +45,7 @@
 // deferred opaque always use FPTL
 #define USE_FPTL_LIGHTLIST 1
 
-// #pragma enable_d3d11_debug_symbols
+#pragma enable_d3d11_debug_symbols
 
 //-------------------------------------------------------------------------------------
 // Include
@@ -172,7 +172,6 @@ void SHADE_OPAQUE_ENTRY(uint3 dispatchThreadId : SV_DispatchThreadID, uint2 grou
     // Alias
     float3 diffuseLighting = lightLoopOutput.diffuseLighting;
     float3 specularLighting = lightLoopOutput.specularLighting;
-
     diffuseLighting *= GetCurrentExposureMultiplier();
     specularLighting *= GetCurrentExposureMultiplier();
 
